@@ -17,15 +17,20 @@ class Event
     {
         if($arFields)
         {
+            $slavesGroupId = Subfunction::getOptionValue(self::MODULE_ID,'AL_MAYBEE_SLAVES_REPORTS_GROUP');
+            $ownersGroupId = Subfunction::getOptionValue(self::MODULE_ID,'AL_MAYBEE_OWNERS_REPORTS_GROUP');
+
             $reportArr = Subfunction::getReportDataById($arFields);
-            if($reportArr)
+
+            //Запуск уведомлдений только если обе группы выбраны в options.php!
+            if($reportArr && $slavesGroupId && $ownersGroupId)
             {
                 //если чувак в группе Рабов
-                $slavesGroupArr = Subfunction::getUsersFromGroup(17);
+                $slavesGroupArr = Subfunction::getUsersFromGroup($slavesGroupId);
                 if($slavesGroupArr && in_array($reportArr['USER_ID'],$slavesGroupArr))
                 {
                     //получаем массив Хозяев
-                    $ownersGroupArr = Subfunction::getUsersFromGroup(18);
+                    $ownersGroupArr = Subfunction::getUsersFromGroup($ownersGroupId);
                     if($ownersGroupArr)
                     {
                         //для каждого хозяина формируем сообщение
@@ -50,7 +55,6 @@ class Event
                             $reports_page = \COption::GetOptionString("timeman", "TIMEMAN_REPORT_PATH", "/timeman/timeman.php");
                             $arTmp = \CSocNetLogTools::ProcessPath(array("REPORTS_PAGE" => $reports_page), $owner);
 
-
                             $messageArr = [
                                 'TO_USER_ID' => $owner,
                                 "MESSAGE_TYPE" => IM_MESSAGE_SYSTEM,
@@ -59,41 +63,33 @@ class Event
 //                                "NOTIFY_MODULE" => "timeman",
                                 "NOTIFY_MODULE" => self::MODULE_ID,
                                 "NOTIFY_EVENT" => "entry",
-//                        "LOG_ID" => $arEntry["LOG_ID"],
+//                                "LOG_ID" => $arEntry["LOG_ID"],
                                 "NOTIFY_TAG" => "TIMEMAN|ENTRY|" . $reportArr["ENTRY_ID"],
                             ];
 
-//                    $messageArr["NOTIFY_MESSAGE"] = GetMessage("AL_MAYBEE_SLAVES_REPORTS_CONTROL_REPORT_FULL_IM_ADD".$gender_suffix, Array(
-//                        "#period#" => "<a href=\"".$arTmp["URLS"]["REPORTS_PAGE"]."\" class=\"bx-notifier-item-action\">".htmlspecialcharsbx($arEntry["DATE_TEXT"])."</a>",
-//                    ));
-
-                            $messageArr["NOTIFY_MESSAGE"] = $gender_suffix." <a href=\"".$arTmp["URLS"]["REPORTS_PAGE"]."\" class=\"bx-notifier-item-action\">".htmlspecialcharsbx($arEntry["DATE_TEXT"])."</a>";
+                            $messageArr["NOTIFY_MESSAGE"] = GetMessage("AL_MAYBEE_SLAVES_REPORTS_CONTROL_REPORT_FULL_IM_ADD".$gender_suffix, Array(
+                                "#period#" => "<a href=\"".$arTmp["URLS"]["REPORTS_PAGE"]."\" class=\"bx-notifier-item-action\">".htmlspecialcharsbx($arEntry["DATE_TEXT"])."</a>",
+                            ));
 
 
-//                    $messageArr["NOTIFY_MESSAGE_OUT"] = GetMessage("AL_MAYBEE_SLAVES_REPORTS_CONTROL_REPORT_FULL_IM_ADD".$gender_suffix, Array(
-//                            "#period#" => htmlspecialcharsbx($arEntry["DATE_TEXT"]),
-//                        ))." (".$arTmp["SERVER_NAME"].$arTmp["URLS"]["REPORTS_PAGE"].")";
+                            $messageArr["NOTIFY_MESSAGE_OUT"] = GetMessage("AL_MAYBEE_SLAVES_REPORTS_CONTROL_REPORT_FULL_IM_ADD".$gender_suffix, Array(
+                                    "#period#" => htmlspecialcharsbx($arEntry["DATE_TEXT"]),
+                                ))." (".$arTmp["SERVER_NAME"].$arTmp["URLS"]["REPORTS_PAGE"].")";
 
-                            $messageArr["NOTIFY_MESSAGE_OUT"] = $gender_suffix.' '.htmlspecialcharsbx($arEntry["DATE_TEXT"])." (".$arTmp["SERVER_NAME"].$arTmp["URLS"]["REPORTS_PAGE"].")";
 
-//                            \CIMNotify::Add($messageArr);
-
+                            \CIMNotify::Add($messageArr);
 
                             $hh[] = $messageArr;
                         }
 
-
+                        $hh[] = ['slaves' => $slavesGroupId,'owners' => $ownersGroupId];
 
                     }
-
                 }
-
-
             }
         }
 
         Subfunction::logData($hh);
-
     }
     
     

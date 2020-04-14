@@ -1,0 +1,6 @@
+<?php
+$MESS["AL_MAYBEE_SLAVES_REPORTS_CONTROL_OPTION_TAB_INFO"] = "Вибір груп";
+$MESS["AL_MAYBEE_SLAVES_REPORTS_CONTROL_OPTION_TAB_DESCRIPRION"] = "Необхідно вибрати значення в полях";
+$MESS["AL_MAYBEE_SLAVES_REPORTS_CONTROL_OPTION_TAB_TITLE"] = "Групи";
+$MESS["AL_MAYBEE_SLAVES_REPORTS_CONTROL_OPTION_SLAVES_GROUP"] = "Група співробітників, дії яких відслідковуються";
+$MESS["AL_MAYBEE_SLAVES_REPORTS_CONTROL_OPTION_OWNERS_GROUP"] = "Група керівників, які отримують повідомлення";

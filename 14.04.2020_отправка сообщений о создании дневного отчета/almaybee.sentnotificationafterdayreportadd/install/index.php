@@ -1,7 +1,8 @@
 <?php
-use Bitrix\Main\Loader;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\ModuleManager;
+use Bitrix\Main\Loader,
+    Bitrix\Main\Localization\Loc,
+    Bitrix\Main\ModuleManager,
+    Bitrix\Main\EventManager;
 
 Loc::loadMessages(__FILE__);
 
@@ -24,14 +25,14 @@ class almaybee_sentnotificationafterdayreportadd extends \CModule
 
     public function InstallEvents()
     {
-        EventManager::getInstance()->registerEventHandler('timeman', 'OnAfterTMReportUpdate', $this->MODULE_ID, 'Almaybee\Sentnotificationafterdayreportadd\Event', 'catchDailyReportAdd');
+        EventManager::getInstance()->registerEventHandler('timeman', 'OnAfterTMReportAdd', $this->MODULE_ID, 'Almaybee\Sentnotificationafterdayreportadd\Event', 'catchDailyReportAdd');
 
         return true;
     }
 
     public function UnInstallEvents()
     {
-        EventManager::getInstance()->unRegisterEventHandler('timeman', 'OnAfterTMReportUpdate', $this->MODULE_ID, 'Almaybee\Sentnotificationafterdayreportadd\Event', 'catchDailyReportAdd');
+        EventManager::getInstance()->unRegisterEventHandler('timeman', 'OnAfterTMReportAdd', $this->MODULE_ID, 'Almaybee\Sentnotificationafterdayreportadd\Event', 'catchDailyReportAdd');
 
         return true;
     }
