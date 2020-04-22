@@ -53,19 +53,21 @@ if($productsIds)
         foreach ($arResult['PRODUCTS'] as $id => $productArr)
         {
             //Для торговых предложений
-            if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']))
+            if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']) && $productArr['SKU_ITEMS']['SKU_ELEMENTS'])
             {
-                foreach ($product['SKU_ITEMS']['SKU_ELEMENTS'] as $num => $productPredlArr)
+                foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num => $productPredlArr)
                 {
-                    if($productPredlArr['ID'] == $prodArr['PRODUCT_ID'])
+                    if($productPredlArr['ID'] == $prodArr['PRODUCT_ID'] && $prodArr['AMOUNT'] > 0)
                     {
-                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num]['CUSTOM_STORE'][] = $prodArr;
+                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num]['CUSTOM_STORE'] .=
+                            $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$productPredlArr['MEASURE']['SYMBOL']."; ";
                     }
                 }
             }
-            elseif($productArr['PRODUCT']['ID'] == $prodArr['PRODUCT_ID'])
+            elseif($productArr['PRODUCT']['ID'] == $prodArr['PRODUCT_ID'] && $prodArr['AMOUNT'] > 0)
             {
-                $arResult['PRODUCTS'][$id]['PRODUCT']['CUSTOM_STORE'][] = $prodArr;
+                $arResult['PRODUCTS'][$id]['CUSTOM_STORE'] =
+                    $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$productArr['PRODUCT']['MEASURE']['SYMBOL']."; ";
             }
         }
     }
@@ -82,16 +84,18 @@ if($productsIds)
             //Для торговых предложений
             if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']))
             {
-                foreach ($product['SKU_ITEMS']['SKU_ELEMENTS'] as $num => $productPredlArr)
+                foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num1 => $productPredlArr1)
                 {
-                    if($productPredlArr['ID'] == $res['ID'])
-                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                    if($productPredlArr1['ID'] == $res['ID'])
+                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num1]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
                 }
             }
-            elseif($productArr['PRODUCT']['ID'] == $res['ID'])
+            elseif($productArr['PRODUCT']['ID'] == $res['ID'] && $res['QUANTITY_RESERVED'] > 0)
             {
-                $arResult['PRODUCTS'][$id]['PRODUCT']['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                $arResult['PRODUCTS'][$id]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
             }
+
+            $arResult['TEST'][$productArr['PRODUCT']['ID']][] = $res;
         }
     }
 

@@ -36,8 +36,4 @@ $MESS["CRM_ORDER_PL_TUNE"] = "Add";
 $MESS["CRM_ORDER_PL_VAT"] = "Tax rate";
 $MESS["CRM_ORDER_PL_WEIGHT"] = "Weight";
 $MESS["CRM_ORDER_PL_YES"] = "Yes";
-
-
-//склады
-$MESS["CRM_ORDER_CUSTOM_QUANTITY_RESERVED"] = "Reserved: ";
 ?>

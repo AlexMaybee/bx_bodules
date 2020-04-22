@@ -26,7 +26,7 @@ class almaybee_addstorestoorderproducts extends \CModule
     {
         $copyRes = CopyDirFiles($this->GetPatch() . "/install/components/", $_SERVER["DOCUMENT_ROOT"] . "/local/components/", true, true);
 
-        self::logData($copyRes);
+//        self::logData($copyRes);
 
         return true;
     }
@@ -70,7 +70,7 @@ class almaybee_addstorestoorderproducts extends \CModule
     }
 
     public function logData($data){
-        $file = $_SERVER["DOCUMENT_ROOT"].'/aaa.log';
+        $file = $_SERVER["DOCUMENT_ROOT"].'/123.log';
         file_put_contents($file, print_r([date('d.m.Y H:i:s'),$data],true), FILE_APPEND | LOCK_EX);
     }
 

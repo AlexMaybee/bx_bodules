@@ -36,8 +36,4 @@ $MESS["CRM_ORDER_PL_PROD_EXIST_DLG_TEXT"] = "Товар \"#NAME#\" уже ест
 $MESS["CRM_ORDER_PL_PROD_EXIST_DLG_BUTT_ADD"] = "Добавить";
 $MESS["CRM_ORDER_PL_PROD_EXIST_DLG_BUTT_CANCEL"] = "Отмена";
 $MESS["CRM_ORDER_PL_CHOOSE_ACTION"] = "Выберите действие";
-
-
-//склады
-$MESS["CRM_ORDER_CUSTOM_QUANTITY_RESERVED"] = "Зарезервировано: ";
 ?>

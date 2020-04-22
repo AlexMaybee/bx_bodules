@@ -1,4 +1,7 @@
 <?php
+use \Bitrix\Main\Localization\Loc;
+
+
 
 //Получаем склады
 $bxStores = \Bitrix\Catalog\StoreTable::getList([
@@ -36,11 +39,23 @@ if($productsIds)
         {
             if($product['OFFER_ID'] == $product['PRODUCT_ID'] && $product['PRODUCT_ID'] == $prodArr['PRODUCT_ID'])
             {
-                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'][] = $prodArr;
-            }
+//                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'][] = $prodArr;
+//                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'] .= $prodArr;
+
+                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'] .= ($prodArr['AMOUNT'] > 0)
+                    ? '<div class="crm-order-product-control-amount-desc">'.$arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$product['MEASURE_TEXT'].';</div> '
+                    : '';
+
+//                if($prodArr['AMOUNT'] > 0)
+//                    $arResult['PRODUCTS'][$num]['CUSTOM_STORES'] .=
+//                        '<div class="crm-order-product-control-amount-desc">'.$arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$product['MEASURE_TEXT'].';</div> ';
+           }
             elseif($product['OFFER_ID'] != $product['PRODUCT_ID'] && $product['OFFER_ID'] == $prodArr['PRODUCT_ID'])
             {
-                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'][] = $prodArr;
+//                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'][] = $prodArr;
+                $arResult['PRODUCTS'][$num]['CUSTOM_STORES'] .= ($prodArr['AMOUNT'] > 0)
+                    ? '<div class="crm-order-product-control-amount-desc">'.$arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$product['MEASURE_TEXT'].';</div> '
+                    : '';
             }
         }
     }
@@ -57,11 +72,15 @@ if($productsIds)
         {
             if($product['OFFER_ID'] == $product['PRODUCT_ID'] && $product['PRODUCT_ID'] == $res['ID'])
             {
-                $arResult['PRODUCTS'][$num]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                $arResult['PRODUCTS'][$num]['CUSTOM_QUANTITY_RESERVED'] = ($res['QUANTITY_RESERVED'] > 0)
+                    ? '<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_CUSTOM_QUANTITY_RESERVED').': '.$res['QUANTITY_RESERVED'].' '.$product['MEASURE_TEXT'].'</div>'
+                    : '';
             }
             elseif($product['OFFER_ID'] != $product['PRODUCT_ID'] && $product['OFFER_ID'] == $res['ID'])
             {
-                $arResult['PRODUCTS'][$num]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                $arResult['PRODUCTS'][$num]['CUSTOM_QUANTITY_RESERVED'] = ($res['QUANTITY_RESERVED'] > 0)
+                    ? '<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_CUSTOM_QUANTITY_RESERVED').': '.$res['QUANTITY_RESERVED'].' '.$product['MEASURE_TEXT'].'</div>'
+                    : '';
             }
         }
     }

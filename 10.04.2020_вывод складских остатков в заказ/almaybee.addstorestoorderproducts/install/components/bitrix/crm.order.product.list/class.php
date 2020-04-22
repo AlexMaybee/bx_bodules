@@ -198,7 +198,7 @@ final class CCrmOrderProductListComponent extends \CBitrixComponent
 		{
 			$item = $_SESSION['ORDER_BASKET'][$this->order->getId()]['ITEMS'][$_REQUEST['parent_id']];
 			$productId = $item['PRODUCT_ID'];
-			$parentQuantity = (int)$item['QUANTITY'];
+			$parentQuantity = (float)$item['QUANTITY'];
 		}
 		elseif ((int)$_REQUEST['parent_id'] > 0)
 		{
@@ -206,7 +206,7 @@ final class CCrmOrderProductListComponent extends \CBitrixComponent
 			if ($basketItem = $basket->getItemByBasketCode((int)$_REQUEST['parent_id']))
 			{
 				$productId = $basketItem->getProductId();
-				$parentQuantity = (int)$basketItem->getQuantity();
+				$parentQuantity = (float)$basketItem->getQuantity();
 			}
 		}
 

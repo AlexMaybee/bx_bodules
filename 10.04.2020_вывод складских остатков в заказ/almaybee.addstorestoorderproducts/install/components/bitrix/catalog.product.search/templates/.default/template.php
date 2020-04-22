@@ -298,28 +298,6 @@ else
 					}
 					unset($property);
 				}
-
-
-                //my code - custom add field to SKU // для торговых предложений
-                $customSKUstore = '';
-                if(isset($val["CUSTOM_STORE"]))
-                {
-                    foreach ($val["CUSTOM_STORE"] as $prodAtStore)
-                    {
-                        $customSKUstore .= $arResult['MY_CUSTOM_STORES'][$prodAtStore['STORE_ID']]['ADDRESS'].' - '.$prodAtStore['AMOUNT'].' '.$val['MEASURE']['SYMBOL']."; ";
-                    }
-                }
-                $rowSku->AddField("CUSTOM_STORE", $customSKUstore);
-
-                //reserved quantity
-                $customSKUQuantityReserved = '';
-                if(isset($val["CUSTOM_QUANTITY_RESERVED"]) && $val["CUSTOM_QUANTITY_RESERVED"] > 0)
-                {
-                    $customSKUQuantityReserved = $val["CUSTOM_QUANTITY_RESERVED"];
-                }
-                $rowSku->AddField("CUSTOM_QUANTITY_RESERVED",$customSKUQuantityReserved);
-                //my code - custom add field to SKU //для торговых предложений
-
 			}
 		}
 		else
@@ -331,29 +309,6 @@ else
 
 			$balance = isset($arCatalogProduct["STORE_AMOUNT"]) ? (float)$arCatalogProduct["QUANTITY"] . " / " . (float)$arCatalogProduct["STORE_AMOUNT"] : (float)$arCatalogProduct["QUANTITY"];
 			$row->AddField("BALANCE", $arItems['TYPE'] != 'S' ? $balance : '');
-
-			//my code - custom add field
-            $customStore = '';
-            if(isset($arCatalogProduct["CUSTOM_STORE"]))
-            {
-                foreach ($arCatalogProduct["CUSTOM_STORE"] as $prodAtStore)
-                {
-//                    $customStore .= 'ЕСТЬ: '.$arResult['MY_CUSTOM_STORES'][$prodAtStore['STORE_ID']]['TITLE'].' - '.$prodAtStore['AMOUNT'].' '.$arCatalogProduct['MEASURE']['SYMBOL']."; ";
-                    if($prodAtStore['AMOUNT'] > 0)
-                        $customStore .= $arResult['MY_CUSTOM_STORES'][$prodAtStore['STORE_ID']]['ADDRESS'].' - '.$prodAtStore['AMOUNT'].' '.$arCatalogProduct['MEASURE']['SYMBOL']."; ";
-                }
-            }
-            $row->AddField("CUSTOM_STORE", $arItems['TYPE'] != 'S' ? $customStore : '');
-
-            //reserved quantity
-            $customQuantityReserved = '';
-            if(isset($arCatalogProduct["CUSTOM_QUANTITY_RESERVED"]) && $arCatalogProduct["CUSTOM_QUANTITY_RESERVED"] > 0)
-            {
-                $customQuantityReserved = $arCatalogProduct["CUSTOM_QUANTITY_RESERVED"];
-            }
-            $row->AddField("CUSTOM_QUANTITY_RESERVED", $arItems['TYPE'] != 'S' ? $customQuantityReserved : '');
-            //my code  - custom add field
-
 
 			if ($arItems['TYPE'] != 'S')
 			{
@@ -474,7 +429,8 @@ else
 	$lAdmin->EndEpilogContent();
 	$lAdmin->AddAdminContextMenu(array(), false);
 	$lAdmin->CheckListMode();
-    ?>
+
+	?>
 	<!-- START HTML -->
 	<? if (!$arResult['RELOAD']): ?>
 	<div id="<?= $tableId ?>_reload_container" class="catalog-product-search-dialog">
@@ -830,4 +786,9 @@ else
 
 	</script>
 <?
+
+//    echo '<pre>';
+//    print_r($arResult['PRODUCTS']);
+//    print_r($arResult['TEST']);
+//    echo '</pre>';
 }

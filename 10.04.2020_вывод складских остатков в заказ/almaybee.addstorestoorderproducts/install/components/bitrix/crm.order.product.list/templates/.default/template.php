@@ -19,12 +19,6 @@ $isSetItems = $arResult['IS_SET_ITEMS'];
 $isReadOnly = !$arResult['CAN_UPDATE_ORDER'] || $isSetItems;
 $code2Id = [];
 
-//echo '<pre>';
-//print_r($arResult['MY_CUSTOM_STORES']);
-//print_r($arResult['AAAAA']);
-//print_r($arResult['PRODUCTS']);
-//echo '</pre>';
-
 foreach($arResult['PRODUCTS'] as $product)
 {
 	$namePrefix = 'PRODUCT['.$product['BASKET_CODE'].']';
@@ -285,48 +279,44 @@ foreach($arResult['PRODUCTS'] as $product)
 	}
 	else
 	{
-		$quantityInnerHtml = '<input id="crm-product-quantity-'.$product['BASKET_CODE'].'" name="'.$namePrefix.'[QUANTITY]" type="number" value="'.(float)$product['QUANTITY'].'" class="crm-order-product-control-amount-field"> '.$product['MEASURE_TEXT'];
+		$quantityInnerHtml = '<input id="crm-product-quantity-'.$product['BASKET_CODE'].'" name="'.$namePrefix.'[QUANTITY]" type="number" step="'.$product['MEASURE_RATIO'].'" value="'.(float)$product['QUANTITY'].'" class="crm-order-product-control-amount-field"> '.$product['MEASURE_TEXT'];
 	}
+
+	//stock bitrix
+//	$quantityColumn = '
+//		<div class="crm-order-product-control-amount">'
+//			.$quantityInnerHtml.
+//			'<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_PL_AVAILABLE').': '.(float)$product['AVAILABLE'].' '.$product['MEASURE_TEXT'].'</div>
+//		</div>
+//	';
+
+	//end region
 
 
     //my code quantity reserved
-    $customQuantityReserved = '';
-    if(isset($product['CUSTOM_QUANTITY_RESERVED']) && $product['CUSTOM_QUANTITY_RESERVED'] > 0)
-        $customQuantityReserved = '<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_CUSTOM_QUANTITY_RESERVED').': '.$product['CUSTOM_QUANTITY_RESERVED'].' '.$product['MEASURE_TEXT'].'</div>';
+    $customDivs = (isset($product['CUSTOM_QUANTITY_RESERVED']) && $product['CUSTOM_QUANTITY_RESERVED'])
+        ? $product['CUSTOM_QUANTITY_RESERVED']
+        : '';
 
-    $quantityColumn = '
-		<div class="crm-order-product-control-amount">'
-			.$quantityInnerHtml.
-			'<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_PL_AVAILABLE').': '.(float)$product['AVAILABLE'].' '.$product['MEASURE_TEXT'].'</div>'
-	        .$customQuantityReserved. //del this to return stock
-        '</div>
-	';
-	//end region
+    //my code quantity reserved
 
     //my code custom store amount echo
-    if($arResult['MY_CUSTOM_STORES'] && isset($product['CUSTOM_STORES']) && $product['CUSTOM_STORES']):
+//    if($arResult['MY_CUSTOM_STORES'] && isset($product['CUSTOM_STORES']) && $product['CUSTOM_STORES']):
 
-        $storeInfo = '';
-
-        if($customQuantityReserved)
-            $storeInfo .= $customQuantityReserved;
-
-        foreach ($product['CUSTOM_STORES'] as $store) //CRM_ORDER_CUSTOM_STORE_AVAILABLE
-        {
-            if(in_array($store['STORE_ID'],array_keys($arResult['MY_CUSTOM_STORES'])))
-                if($store['AMOUNT'] > 0)
-                    $storeInfo .= '<div class="crm-order-product-control-amount-desc">'.$arResult['MY_CUSTOM_STORES'][$store['STORE_ID']]['ADDRESS'].' - '.$store['AMOUNT'].' '.$product['MEASURE_TEXT'].';</div> ';
-        }
+    $customDivs .= ($product['CUSTOM_STORES'])
+            ? $product['CUSTOM_STORES']
+            : '';
 
         $quantityColumn = '
 		<div class="crm-order-product-control-amount">'
             .$quantityInnerHtml.
             '<div class="crm-order-product-control-amount-desc">'.Loc::getMessage('CRM_ORDER_PL_AVAILABLE').': '.(float)$product['AVAILABLE'].' '.$product['MEASURE_TEXT'].'</div>'
-            .$storeInfo.
-		'</div>
+            .$customDivs.
+            '</div>
 	';
-    endif;
+//    endif;
     //my code custom store amount echo
+
 
 	//region VAT
 	if ($isReadOnly)
@@ -974,4 +964,10 @@ if(is_array($arResult['DISCOUNTS_LIST']['DISCOUNT_LIST']))
 </div>
 </div>
 </div>
-<?//endregion?>
+<?//endregion
+
+//echo "<pre>";
+//print_r($arResult['PRODUCTS']);
+//echo "</pre>";
+
+?>
