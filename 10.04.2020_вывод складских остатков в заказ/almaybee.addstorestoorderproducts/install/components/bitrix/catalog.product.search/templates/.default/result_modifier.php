@@ -50,24 +50,27 @@ if($productsIds)
     ]);
     while($prodArr = $productsAtStores->fetch())
     {
-        foreach ($arResult['PRODUCTS'] as $id => $productArr)
+        if($prodArr['AMOUNT'] != 0)
         {
-            //Для торговых предложений
-            if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']) && $productArr['SKU_ITEMS']['SKU_ELEMENTS'])
+            foreach ($arResult['PRODUCTS'] as $id => $productArr)
             {
-                foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num => $productPredlArr)
+                //Для торговых предложений
+                if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']) && $productArr['SKU_ITEMS']['SKU_ELEMENTS'])
                 {
-                    if($productPredlArr['ID'] == $prodArr['PRODUCT_ID'] && $prodArr['AMOUNT'] > 0)
+                    foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num => $productPredlArr)
                     {
-                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num]['CUSTOM_STORE'] .=
-                            $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$productPredlArr['MEASURE']['SYMBOL']."; ";
+                        if($productPredlArr['ID'] == $prodArr['PRODUCT_ID'])
+                        {
+                            $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num]['CUSTOM_STORE'] .=
+                                $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].': '.$prodArr['AMOUNT'].' '.$productPredlArr['MEASURE']['SYMBOL']."; ";
+                        }
                     }
                 }
-            }
-            elseif($productArr['PRODUCT']['ID'] == $prodArr['PRODUCT_ID'] && $prodArr['AMOUNT'] > 0)
-            {
-                $arResult['PRODUCTS'][$id]['CUSTOM_STORE'] =
-                    $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].' - '.$prodArr['AMOUNT'].' '.$productArr['PRODUCT']['MEASURE']['SYMBOL']."; ";
+                elseif($productArr['PRODUCT']['ID'] == $prodArr['PRODUCT_ID'])
+                {
+                    $arResult['PRODUCTS'][$id]['CUSTOM_STORE'] =
+                        $arResult['MY_CUSTOM_STORES'][$prodArr['STORE_ID']]['ADDRESS'].': '.$prodArr['AMOUNT'].' '.$productArr['PRODUCT']['MEASURE']['SYMBOL']."; ";
+                }
             }
         }
     }
@@ -79,23 +82,26 @@ if($productsIds)
     ]);
     while($res = $prodsReserved->fetch())
     {
-        foreach ($arResult['PRODUCTS'] as $id => $productArr)
+        if($res['QUANTITY_RESERVED'] > 0)
         {
-            //Для торговых предложений
-            if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']))
+            foreach ($arResult['PRODUCTS'] as $id => $productArr)
             {
-                foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num1 => $productPredlArr1)
+                //Для торговых предложений
+                if(isset($productArr['SKU_ITEMS']['SKU_ELEMENTS']))
                 {
-                    if($productPredlArr1['ID'] == $res['ID'])
-                        $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num1]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                    foreach ($productArr['SKU_ITEMS']['SKU_ELEMENTS'] as $num1 => $productPredlArr1)
+                    {
+                        if($productPredlArr1['ID'] == $res['ID'])
+                            $arResult['PRODUCTS'][$id]['SKU_ITEMS']['SKU_ELEMENTS'][$num1]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                    }
                 }
-            }
-            elseif($productArr['PRODUCT']['ID'] == $res['ID'] && $res['QUANTITY_RESERVED'] > 0)
-            {
-                $arResult['PRODUCTS'][$id]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
-            }
+                elseif($productArr['PRODUCT']['ID'] == $res['ID'])
+                {
+                    $arResult['PRODUCTS'][$id]['CUSTOM_QUANTITY_RESERVED'] = $res['QUANTITY_RESERVED'];
+                }
 
-            $arResult['TEST'][$productArr['PRODUCT']['ID']][] = $res;
+                $arResult['TEST'][$productArr['PRODUCT']['ID']][] = $res;
+            }
         }
     }
 

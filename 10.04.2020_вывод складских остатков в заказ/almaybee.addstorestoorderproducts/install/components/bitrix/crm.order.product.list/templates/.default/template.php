@@ -303,7 +303,7 @@ foreach($arResult['PRODUCTS'] as $product)
     //my code custom store amount echo
 //    if($arResult['MY_CUSTOM_STORES'] && isset($product['CUSTOM_STORES']) && $product['CUSTOM_STORES']):
 
-    $customDivs .= ($product['CUSTOM_STORES'])
+    $customDivs .= (isset($product['CUSTOM_STORES']) && $product['CUSTOM_STORES'])
             ? $product['CUSTOM_STORES']
             : '';
 
